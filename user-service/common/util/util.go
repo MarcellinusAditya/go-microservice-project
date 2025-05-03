@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func BindFromJson(dest any, filename, path string) error {
+func BindFromJSON(dest any, filename, path string) error {
 	v := viper.New()
 
 	v.SetConfigType("json")
