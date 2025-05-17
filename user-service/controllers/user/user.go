@@ -71,6 +71,7 @@ func (u *UserController) Login(ctx *gin.Context) {
 		Token: &user.Token,
 		Gin:   ctx,
 	})
+
 }
 
 func (u *UserController) Register(ctx *gin.Context) {
@@ -116,6 +117,7 @@ func (u *UserController) Register(ctx *gin.Context) {
 		Data: user.User,
 		Gin:  ctx,
 	})
+	
 }
 
 func (u *UserController) Update(ctx *gin.Context) {
