@@ -15,6 +15,7 @@ import (
 	"field-service/services"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/didip/tollbooth"
@@ -68,7 +69,7 @@ var command = &cobra.Command{
 		router.GET("/", func(c *gin.Context) {
 			c.JSON(http.StatusOK, response.Response{
 				Status:  constants.Success,
-				Message: "Welcome to User Service",
+				Message: "Welcome to Field Service",
 			})
 		})
 		//course handler config
@@ -114,6 +115,9 @@ func initGCS() gcs.IGCSClient {
 	}
 
 	stringPrivateKey := string(decode)
+	stringPrivateKey = strings.ReplaceAll(stringPrivateKey, "\\n", "\n")
+	
+
 	gcsServiceAccount := gcs.ServiceAccountKeyJSON{
 		Type:                    config.Config.GCSType,
 		ProjectID:               config.Config.GCSProjectID,
