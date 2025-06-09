@@ -5,17 +5,18 @@ import (
 	"fmt"
 	"net/http"
 	"payment-service/clients"
+	midtransClient "payment-service/clients/midtrans"
 	"payment-service/common/gcs"
 	"payment-service/common/response"
 	"payment-service/config"
 	"payment-service/constants"
-	"payment-service/controllers"
+	controllers "payment-service/controllers/http"
+	kafkaClient "payment-service/controllers/kafka"
 	"payment-service/domain/models"
 	"payment-service/middlewares"
 	"payment-service/repositories"
 	"payment-service/routes"
 	"payment-service/services"
-	"strings"
 	"time"
 
 	"github.com/didip/tollbooth"
@@ -43,20 +44,23 @@ var command = &cobra.Command{
 		time.Local = loc
 
 		err = db.AutoMigrate(
-			&models.Field{},
-			&models.FieldSchedule{},
-			&models.Time{},
+			&models.Payment{},
+			&models.PaymentHistory{},
 		)
 		if err != nil {
 			panic(err)
 		}
 
 		gcs := initGCS()
+		kafka := kafkaClient.NewKafkaRegistry(config.Config.Kafka.Brokers)
+		midtrans := midtransClient.NewMidtransClient(
+			config.Config.Midtrans.ServerKey,
+			config.Config.Midtrans.IsProduction,
+		)
 		client := clients.NewClientRegistry()
 		repository := repositories.NewRepositoryRegistry(db)
-		service := services.NewServiceRegistry(repository, gcs)
+		service := services.NewServiceRegistry(repository, gcs, kafka, midtrans)
 		controller := controllers.NewControllerRegistry(service)
-
 
 		router := gin.Default()
 		router.Use(middlewares.HandlePanic())
@@ -69,10 +73,9 @@ var command = &cobra.Command{
 		router.GET("/", func(c *gin.Context) {
 			c.JSON(http.StatusOK, response.Response{
 				Status:  constants.Success,
-				Message: "Welcome to Field Service",
+				Message: "Welcome to Payment Service",
 			})
 		})
-		//course handler config
 		router.Use(func(c *gin.Context) {
 			c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 			c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH")
@@ -84,7 +87,6 @@ var command = &cobra.Command{
 			c.Next()
 		})
 
-		//limiter
 		lmt := tollbooth.NewLimiter(
 			config.Config.RateLimiterMaxRequest,
 			&limiter.ExpirableOptions{
@@ -115,9 +117,6 @@ func initGCS() gcs.IGCSClient {
 	}
 
 	stringPrivateKey := string(decode)
-	stringPrivateKey = strings.ReplaceAll(stringPrivateKey, "\\n", "\n")
-	
-
 	gcsServiceAccount := gcs.ServiceAccountKeyJSON{
 		Type:                    config.Config.GCSType,
 		ProjectID:               config.Config.GCSProjectID,
