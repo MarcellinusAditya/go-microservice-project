@@ -57,7 +57,7 @@ func (g *GCSClient) createClient(ctx context.Context) (*storage.Client, error) {
 		logrus.Errorf("failed to create client: %v", err)
 		return nil, err
 	}
-	logrus.Errorf("ServiceAccountKeyJSON: %s", string(jsonByte))
+	
 
 	return client, nil
 }

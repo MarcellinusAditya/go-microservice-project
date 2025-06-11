@@ -17,6 +17,7 @@ import (
 	"payment-service/repositories"
 	"payment-service/routes"
 	"payment-service/services"
+	"strings"
 	"time"
 
 	"github.com/didip/tollbooth"
@@ -117,6 +118,8 @@ func initGCS() gcs.IGCSClient {
 	}
 
 	stringPrivateKey := string(decode)
+	stringPrivateKey = strings.ReplaceAll(stringPrivateKey, "\\n", "\n")
+	
 	gcsServiceAccount := gcs.ServiceAccountKeyJSON{
 		Type:                    config.Config.GCSType,
 		ProjectID:               config.Config.GCSProjectID,
