@@ -34,7 +34,7 @@ type AppConfig struct {
 	GCSUniverseDomain          string          `json:"gcsUniverseDomain"`
 	GCSBucketName              string          `json:"gcsBucketName"`
 	Kafka	Kafka 	`json:"kafka"`
-	Midtrans Midtrans `json:"midtrans"`
+	
 }
 
 //stuct user-service
@@ -75,15 +75,13 @@ type Kafka struct {
 	Brokers     []string `json:"brokers"`
 	TimeoutInMS int      `json:"timeoutInMS"`
 	MaxRetry    int      `json:"maxRetry"`
-	Topic       string   `json:"topic"`
+	Topic       []string   `json:"topics"`
+	GroupID	string `json:"groupID"`
+	MaxWaitTimeInMS	int `json:"maxWaitTimeInMS"`
+	MaxProcessingTimeInMS	int `json:"maxProcessingTimeInMS"`
+	BackOffTimeInMs       int      `json:"backOffTimeInMs"`
 }
 
-//config midtrans
-type Midtrans struct {
-	ServerKey    string `json:"serverKey"`
-	ClientKey    string `json:"clientKey"`
-	IsProduction bool   `json:"isProduction"`
-}
 
 //Fungsi untuk memngambil config dari config.json jika berada dilokal
 //Namun akan menambil dair .env jika pada development atau production di server
