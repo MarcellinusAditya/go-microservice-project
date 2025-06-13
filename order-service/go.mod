@@ -1,1 +1,1 @@
-module user-service
+module order-service
