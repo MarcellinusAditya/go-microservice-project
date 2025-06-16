@@ -1,6 +1,6 @@
 package dto
 
-type OrderFiledRequest struct {
+type OrderFieldRequest struct {
 	OrderID         uint
 	FieldScheduleID string
 }
