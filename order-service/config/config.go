@@ -75,7 +75,7 @@ type Kafka struct {
 	Brokers     []string `json:"brokers"`
 	TimeoutInMS int      `json:"timeoutInMS"`
 	MaxRetry    int      `json:"maxRetry"`
-	Topic       []string   `json:"topics"`
+	Topics       []string   `json:"topics"`
 	GroupID	string `json:"groupID"`
 	MaxWaitTimeInMS	int `json:"maxWaitTimeInMS"`
 	MaxProcessingTimeInMS	int `json:"maxProcessingTimeInMS"`
