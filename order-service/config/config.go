@@ -77,8 +77,8 @@ type Kafka struct {
 	MaxRetry    int      `json:"maxRetry"`
 	Topics       []string   `json:"topics"`
 	GroupID	string `json:"groupID"`
-	MaxWaitTimeInMS	int `json:"maxWaitTimeInMS"`
-	MaxProcessingTimeInMS	int `json:"maxProcessingTimeInMS"`
+	MaxWaitTimeInMs	int `json:"maxWaitTimeInMS"`
+	MaxProcessingTimeInMs	int `json:"maxProcessingTimeInMS"`
 	BackOffTimeInMs       int      `json:"backOffTimeInMs"`
 }
 
